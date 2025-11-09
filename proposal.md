@@ -5,7 +5,6 @@
 <https://github.com/raccooncow/maya-assist-biped-rig.git>
 
 ## Description
-1-2 sentence description of what it will do and how it relevant to media and digital arts.
 A Python rigging tool for Autodesk Maya, the user manually places key joints, and the program builds the rest of the rig, including hierarchy, controls, and IK/FK uses. This program will streamline the rigging process for animation, which is relevant to digital arts/media.
 
 ## Features
