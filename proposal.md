@@ -33,15 +33,19 @@ Minimal Viable Outcome:
 - Correctly oriented joints, IK/FK joints, Controls + groups, proper hierarchy for all groups, IK/FK joints, Controls + groups, proper hierarchy for controls.
 
 ## Milestones
+- Week 1 (Nov 9 - Nov 15)
+  1. Set up a GitHub repository
+  2. Finalize PROPOSAL
+  3. Create code for user-made joints/markers in MAYA
+  4. Create code for basic hierarchy for the rig and orienting joints
 
-- Week 1
-  1. Goal 1
-  2. Goal 2
+- Week 2 (Nov 16 - Nov 22)
+  1. Create code for colored Nurbs controls and constrain properly
+  2. Create code for IK/FK legs and arms
+  3. Create code for naming conventions and organizing into a basic hierarchy
 
-- Week 2
-  1. Goal 1
-  2. Goal 2
-
-- Week N (Final)
-  1. Goal 1
-  2. Goal 2
+- Week 3 (Nov 23 - Dec 7)
+  1. Test programs and rigs, fix any errors
+  2. Finalize READ ME, push final changes
+  3. Record video demonstration
+  4. Submit everything.
