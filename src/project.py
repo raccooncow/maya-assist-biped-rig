@@ -104,6 +104,8 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     con_name = jnt_name.replace("_JNT", "_CON")
     grp_name = jnt_name.replace("_JNT", "_GRP")
     # Create circle control
+    con = cmds.circle(n=con_name, ch=False, o=True, nr=[1,0,0], r=radius)[0]
+    grp = cmds.group(con, n=grp_name)
     # Move group to joint
     # Color override
     # Parent constraint joint to control
