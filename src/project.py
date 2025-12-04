@@ -80,4 +80,8 @@ for loc, parent_loc in parents.items():
 
 # Mirror Left Joints to Right
     # Mirror Arm
+    if joint_map.get("L_shoulder_LOC"):
+        cmds.mirrorJoint()
     # Mirror leg
+    if joint_map.get("L_hip_LOC"):
+        cmds.mirrorJoint()
