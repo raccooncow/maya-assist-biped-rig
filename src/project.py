@@ -117,5 +117,6 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     else:
         cmds.setAttr(con + ".overrideColor", COLOR_CENTER)
     # Parent constraint joint to control
-
+    cmds.parentConstraint(con, jnt_name)
+    return grp, con
 # Make hierarchy
