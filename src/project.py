@@ -49,7 +49,6 @@ for loc in center_locs:
 for loc in left_locs:
     joint_map[loc] = create_joint(loc)
 
-
 for loc, parent_loc in parents.items():
     if joint_map.get(loc) and joint_map.get(parent_loc):
         cmds.parent(joint_map[loc], joint_map[parent_loc])
@@ -140,13 +139,27 @@ for jnt in center_joints:
 parent = None
 for jnt in left_joints:
     grp, con = create_grp_con(jnt, side="L", radius=8)
-    if grp and parent:
-        cmds.parent(grp, parent)
+    if grp:
+        # L_hip_CON driven by pelvis_CON
+        if jnt == "L_hip_JNT":
+            cmds.parent(grp, "pelvis_CON")
+        # L_shoulder_CON driven by spine02_CON
+        elif jnt == "L_shoulder_JNT":
+            cmds.parent(grp, "spine02_CON")
+        elif parent:
+            cmds.parent(grp, parent)
     parent = con
 
 parent = None
 for jnt in right_joints:
     grp, con = create_grp_con(jnt, side="R", radius=8)
-    if grp and parent:
-        cmds.parent(grp, parent)
+    if grp:
+        # R_hip_CON driven by pelvis_CON
+        if jnt == "R_hip_JNT":
+            cmds.parent(grp, "pelvis_CON")
+        # R_shoulder_CON driven by spine02_CON
+        elif jnt == "R_shoulder_JNT":
+            cmds.parent(grp, "spine02_CON")
+        elif parent:
+            cmds.parent(grp, parent)
     parent = con
