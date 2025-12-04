@@ -57,6 +57,9 @@ for loc in left_locs:
     joint_map[loc] = create_joint(loc)
 
 # Parenting Joints
+    for loc, parent_loc in parents.items():
+        if joint_map.get(loc) and joint_map.get(parent_loc):
+            cmds.parent(joint_map[loc], joint_map[parent_loc])
 
 # Orienting Joints
     # Center Chain
