@@ -1,6 +1,11 @@
 # note: Maya.cmds is for running this code in maya script editor. Ignore import error.
 import maya.cmds as cmds
 
+#
+# PHASE 1 : Using markers to create basic biped heriarchy, groups, joints, joint heirarchy,
+# and orienting joints. (No hands, feet, or head)
+#
+
 center_locs = [
     "pelvis_LOC",
     "spine01_LOC",
@@ -76,3 +81,7 @@ if joint_map.get("L_hip_LOC"):
         mirrorBehavior=True,
         searchReplace=("L_", "R_")
     )
+
+#
+# PHASE 2 : Creating Controls for each joint.
+#
