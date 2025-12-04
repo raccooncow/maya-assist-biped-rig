@@ -50,7 +50,11 @@ def create_joint(loc):
         cmds.select(clear=True)
         return jnt
     # Center
+for loc in center_locs:
+    joint_map[loc] = create_joint(loc)
     # Left
+for loc in left_locs:
+    joint_map[loc] = create_joint(loc)
 
 # Parenting Joints
 
