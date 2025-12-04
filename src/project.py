@@ -27,6 +27,9 @@ parents = {
     "spine03_LOC": "spine02_LOC",
     "neck_LOC": "spine03_LOC",
     # Left Arm
+    "L_shoulder_LOC": "spine03_LOC",
+    "L_elbow_LOC": "L_shoulder_LOC",
+    "L_wrist_LOC": "L_elbow_LOC",
     # Left Leg
     }
 # Making Joints Out Of Locators
