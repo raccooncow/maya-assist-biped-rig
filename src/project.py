@@ -88,6 +88,14 @@ if joint_map.get("L_hip_LOC"):
 #
 
 # Add color to _CON
+COLOR_LEFT = 6
+COLOR_RIGHT = 13
+COLOR_CENTER = 17
+
+center_joints = ["pelvis_JNT", "spine01_JNT", "spine02_JNT", "spine03_JNT", "neck_JNT"]
+left_joints = ["L_shoulder_JNT", "L_elbow_JNT", "L_wrist_JNT", "L_hip_JNT", "L_knee_JNT", "L_ankle_JNT"]
+right_joints = ["R_shoulder_JNT", "R_elbow_JNT", "R_wrist_JNT", "R_hip_JNT", "R_knee_JNT", "R_ankle_JNT"]
+
 
 # Create _CON and _GRP
     # Create circle control
