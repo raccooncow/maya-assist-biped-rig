@@ -31,7 +31,11 @@ parents = {
     "L_elbow_LOC": "L_shoulder_LOC",
     "L_wrist_LOC": "L_elbow_LOC",
     # Left Leg
+    "L_hip_LOC": "pelvis_LOC",
+    "L_knee_LOC": "L_hip_LOC",
+    "L_ankle_LOC": "L_knee_LOC",
     }
+
 # Making Joints Out Of Locators
     # Center
     # Left
