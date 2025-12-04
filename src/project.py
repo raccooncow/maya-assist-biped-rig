@@ -1,9 +1,6 @@
-# Pseudocode for STEP 1 OF PROJECT
-
 # note: Maya.cmds is for running this code in maya script editor. Ignore import error.
 import maya.cmds as cmds
-# Locator names
-    # Center
+
 center_locs = [
     "pelvis_LOC",
     "spine01_LOC",
@@ -11,7 +8,6 @@ center_locs = [
     "spine03_LOC",
     "neck_LOC",
 ]
-    # Left Side
 left_locs = [
     "L_shoulder_LOC",
     "L_elbow_LOC",
@@ -20,25 +16,19 @@ left_locs = [
     "L_knee_LOC",
     "L_ankle_LOC",
 ]
-
-# Parenting Locators
 parents = {
-    # Center
     "spine01_LOC": "pelvis_LOC",
     "spine02_LOC": "spine01_LOC",
     "spine03_LOC": "spine02_LOC",
     "neck_LOC": "spine03_LOC",
-    # Left Arm
     "L_shoulder_LOC": "spine03_LOC",
     "L_elbow_LOC": "L_shoulder_LOC",
     "L_wrist_LOC": "L_elbow_LOC",
-    # Left Leg
     "L_hip_LOC": "pelvis_LOC",
     "L_knee_LOC": "L_hip_LOC",
     "L_ankle_LOC": "L_knee_LOC",
 }
 
-# Making Joints Out Of Locators
 joint_map = {}
 def create_joint(loc):
     if not cmds.objExists(loc):
@@ -49,37 +39,29 @@ def create_joint(loc):
     cmds.select(clear=True)
     return jnt
 
-    # Center
 for loc in center_locs:
     joint_map[loc] = create_joint(loc)
-    # Left
 for loc in left_locs:
     joint_map[loc] = create_joint(loc)
 
-# Parenting Joints
+
 for loc, parent_loc in parents.items():
     if joint_map.get(loc) and joint_map.get(parent_loc):
         cmds.parent(joint_map[loc], joint_map[parent_loc])
 
-# Orienting Joints
-    # Center Chain
 if joint_map.get("pelvis_LOC"):
     cmds.select(joint_map["pelvis_LOC"], hi=True)
     cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
     cmds.select(clear=True)
-    # Left Arm Chain
 if joint_map.get("L_shoulder_LOC"):
     cmds.select(joint_map["L_shoulder_LOC"], hi=True)
     cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
     cmds.select(clear=True)
-    # Left Leg Chain
 if joint_map.get("L_hip_LOC"):
     cmds.select(joint_map["L_hip_LOC"], hi=True)
     cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
     cmds.select(clear=True)
 
-# Mirror Left Joints to Right
-    # Mirror Arm
 if joint_map.get("L_shoulder_LOC"):
     cmds.mirrorJoint(
         "L_shoulder_JNT",
@@ -87,7 +69,6 @@ if joint_map.get("L_shoulder_LOC"):
         mirrorBehavior=True,
         searchReplace=("L_", "R_")
     )
-    # Mirror leg
 if joint_map.get("L_hip_LOC"):
     cmds.mirrorJoint(
         "L_hip_JNT",
