@@ -82,7 +82,6 @@ if joint_map.get("L_hip_LOC"):
         searchReplace=("L_", "R_")
     )
 
-# Fix ankle + neck end JNT
 def fix_end_joint(jnt):
     if not cmds.objExists(jnt):
         return
@@ -100,7 +99,6 @@ fix_end_joint("R_ankle_JNT")
 # control hierarchy.
 #
 
-# Add color to _CON
 COLOR_LEFT = 6
 COLOR_RIGHT = 13
 COLOR_CENTER = 17
@@ -109,7 +107,6 @@ center_joints = ["pelvis_JNT", "spine01_JNT", "spine02_JNT", "spine03_JNT", "nec
 left_joints = ["L_shoulder_JNT", "L_elbow_JNT", "L_wrist_JNT", "L_hip_JNT", "L_knee_JNT", "L_ankle_JNT"]
 right_joints = ["R_shoulder_JNT", "R_elbow_JNT", "R_wrist_JNT", "R_hip_JNT", "R_knee_JNT", "R_ankle_JNT"]
 
-# Create _CON and _GRP
 def create_grp_con(jnt_name, side="C", radius=1.0):
     if not cmds.objExists(jnt_name):
         return None, None
@@ -133,7 +130,6 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     cmds.parentConstraint(con, jnt_name)
     return grp, con
 
-# Make hierarchy (Center, Left, Right)
 parent = None
 for jnt in center_joints:
     grp, con = create_grp_con(jnt, side="C", radius=16)
