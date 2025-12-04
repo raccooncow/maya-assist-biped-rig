@@ -129,10 +129,16 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     cmds.parentConstraint(con, jnt_name)
     return grp, con
 
-parent = None
+placement_con = cmds.circle(n="placement_CON", ch=False, o=True, nr=[0,1,0], r=20)[0]
+placement_grp = cmds.group(placement_con, n="placement_GRP")
+cmds.xform(placement_grp, ws=True, t=[0,0,0])
+cmds.setAttr(placement_con + ".overrideEnabled", 1)
+cmds.setAttr(placement_con + ".overrideColor", COLOR_CENTER)
+
+parent = placement_con
 for jnt in center_joints:
     grp, con = create_grp_con(jnt, side="C", radius=16)
-    if grp and parent:
+    if grp:
         cmds.parent(grp, parent)
     parent = con
 
@@ -140,10 +146,8 @@ parent = None
 for jnt in left_joints:
     grp, con = create_grp_con(jnt, side="L", radius=8)
     if grp:
-        # L_hip_CON driven by pelvis_CON
         if jnt == "L_hip_JNT":
             cmds.parent(grp, "pelvis_CON")
-        # L_shoulder_CON driven by spine02_CON
         elif jnt == "L_shoulder_JNT":
             cmds.parent(grp, "spine02_CON")
         elif parent:
@@ -154,10 +158,8 @@ parent = None
 for jnt in right_joints:
     grp, con = create_grp_con(jnt, side="R", radius=8)
     if grp:
-        # R_hip_CON driven by pelvis_CON
         if jnt == "R_hip_JNT":
             cmds.parent(grp, "pelvis_CON")
-        # R_shoulder_CON driven by spine02_CON
         elif jnt == "R_shoulder_JNT":
             cmds.parent(grp, "spine02_CON")
         elif parent:
