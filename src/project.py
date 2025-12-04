@@ -82,6 +82,19 @@ if joint_map.get("L_hip_LOC"):
         searchReplace=("L_", "R_")
     )
 
+# Fix ankle + neck end JNT
+def fix_end_joint(jnt):
+    if not cmds.objExists(jnt):
+        return
+    tmp = cmds.spaceLocator()[0]
+    cmds.delete(cmds.aimConstraint(tmp, jnt, aimVector=[1,0,0], upVector=[0,1,0], worldUpType="scene"))
+    cmds.delete(tmp)
+    cmds.makeIdentity(jnt, apply=True, jointOrient=True)
+
+fix_end_joint("neck_JNT")
+fix_end_joint("L_ankle_JNT")
+fix_end_joint("R_ankle_JNT")
+
 #
 # PHASE 2 : Creating NURBS controls for each joint, setting colors, and building a basic 
 # control hierarchy.
@@ -103,12 +116,12 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
 
     con_name = jnt_name.replace("_JNT", "_CON")
     grp_name = jnt_name.replace("_JNT", "_GRP")
-    # Create circle control
+
     con = cmds.circle(n=con_name, ch=False, o=True, nr=[1,0,0], r=radius)[0]
     grp = cmds.group(con, n=grp_name)
-    # Move group to joint
+
     cmds.delete(cmds.parentConstraint(jnt_name, grp))
-    # Color override
+
     cmds.setAttr(con + ".overrideEnabled", 1)
     if side == "L":
         cmds.setAttr(con + ".overrideColor", COLOR_LEFT)
@@ -116,7 +129,7 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
         cmds.setAttr(con + ".overrideColor", COLOR_RIGHT)
     else:
         cmds.setAttr(con + ".overrideColor", COLOR_CENTER)
-    # Parent constraint joint to control
+
     cmds.parentConstraint(con, jnt_name)
     return grp, con
 
