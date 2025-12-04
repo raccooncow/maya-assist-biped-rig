@@ -1,5 +1,8 @@
 # Pseudocode for STEP 1 OF PROJECT
 
+# note: Maya.cmds is for running this code in maya script editor. Ignore import error.
+def build_skeleton():
+    import maya.cmds as cmds
 # Locator names
     # Center
 center_locs = [
