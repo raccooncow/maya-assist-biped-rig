@@ -83,5 +83,16 @@ if joint_map.get("L_hip_LOC"):
     )
 
 #
-# PHASE 2 : Creating Controls for each joint.
+# PHASE 2 : Creating NURBS controls for each joint, setting colors, and building a basic 
+# control hierarchy.
 #
+
+# Add color to _CON
+
+# Create _CON and _GRP
+    # Create circle control
+    # Move group to joint
+    # Color override
+    # Parent constraint joint to control
+
+# Make hierarchy
