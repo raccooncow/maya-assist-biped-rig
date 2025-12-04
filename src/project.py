@@ -119,4 +119,11 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     # Parent constraint joint to control
     cmds.parentConstraint(con, jnt_name)
     return grp, con
-# Make hierarchy
+
+# Make hierarchy (Center, Left, Right)
+parent = None
+for jnt in center_joints:
+    grp, con = create_grp_con(jnt, side="C", radius=1.5)
+    if grp and parent:
+        cmds.parent(grp, parent)
+    parent = con
