@@ -20,10 +20,15 @@ left_locs = [
 ]
 
 # Parenting Locators
+parents = {
     # Center
+    "spine01_LOC": "pelvis_LOC",
+    "spine02_LOC": "spine01_LOC",
+    "spine03_LOC": "spine02_LOC",
+    "neck_LOC": "spine03_LOC",
     # Left Arm
     # Left Leg
-
+    }
 # Making Joints Out Of Locators
     # Center
     # Left
