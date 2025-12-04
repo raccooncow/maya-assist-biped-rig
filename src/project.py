@@ -10,6 +10,14 @@ center_locs = [
     "neck_LOC",
 ]
     # Left Side
+left_locs = [
+    "L_shoulder_LOC",
+    "L_elbow_LOC",
+    "L_wrist_LOC",
+    "L_hip_LOC",
+    "L_knee_LOC",
+    "L_ankle_LOC",
+]
 
 # Parenting Locators
     # Center
