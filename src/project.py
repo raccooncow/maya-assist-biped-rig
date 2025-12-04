@@ -40,6 +40,15 @@ parents = {
     }
 
 # Making Joints Out Of Locators
+joint_map = {}
+def create_joint(loc):
+        if not cmds.objExists(loc):
+            return None
+        pos = cmds.xform(loc, q=True, ws=True, t=True)
+        jnt_name = loc.replace("_LOC", "_JNT")
+        jnt = cmds.joint(n=jnt_name, p=pos)
+        cmds.select(clear=True)
+        return jnt
     # Center
     # Left
 
