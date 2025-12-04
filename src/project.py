@@ -2,6 +2,13 @@
 
 # Locator names
     # Center
+center_locs = [
+    "pelvis_LOC",
+    "spine01_LOC",
+    "spine02_LOC",
+    "spine03_LOC",
+    "neck_LOC",
+]
     # Left Side
 
 # Parenting Locators
