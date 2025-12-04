@@ -127,3 +127,17 @@ for jnt in center_joints:
     if grp and parent:
         cmds.parent(grp, parent)
     parent = con
+
+parent = None
+for jnt in left_joints:
+    grp, con = create_grp_con(jnt, side="L", radius=1.0)
+    if grp and parent:
+        cmds.parent(grp, parent)
+    parent = con
+
+parent = None
+for jnt in right_joints:
+    grp, con = create_grp_con(jnt, side="R", radius=1.0)
+    if grp and parent:
+        cmds.parent(grp, parent)
+    parent = con
