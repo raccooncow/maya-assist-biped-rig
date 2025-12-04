@@ -107,7 +107,15 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     con = cmds.circle(n=con_name, ch=False, o=True, nr=[1,0,0], r=radius)[0]
     grp = cmds.group(con, n=grp_name)
     # Move group to joint
+    cmds.delete(cmds.parentConstraint(jnt_name, grp))
     # Color override
+    cmds.setAttr(con + ".overrideEnabled", 1)
+    if side == "L":
+        cmds.setAttr(con + ".overrideColor", COLOR_LEFT)
+    elif side == "R":
+        cmds.setAttr(con + ".overrideColor", COLOR_RIGHT)
+    else:
+        cmds.setAttr(con + ".overrideColor", COLOR_CENTER)
     # Parent constraint joint to control
 
 # Make hierarchy
