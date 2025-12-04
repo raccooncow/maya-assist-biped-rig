@@ -96,8 +96,13 @@ center_joints = ["pelvis_JNT", "spine01_JNT", "spine02_JNT", "spine03_JNT", "nec
 left_joints = ["L_shoulder_JNT", "L_elbow_JNT", "L_wrist_JNT", "L_hip_JNT", "L_knee_JNT", "L_ankle_JNT"]
 right_joints = ["R_shoulder_JNT", "R_elbow_JNT", "R_wrist_JNT", "R_hip_JNT", "R_knee_JNT", "R_ankle_JNT"]
 
-
 # Create _CON and _GRP
+def create_grp_con(jnt_name, side="C", radius=1.0):
+    if not cmds.objExists(jnt_name):
+        return None, None
+
+    con_name = jnt_name.replace("_JNT", "_CON")
+    grp_name = jnt_name.replace("_JNT", "_GRP")
     # Create circle control
     # Move group to joint
     # Color override
