@@ -123,21 +123,21 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
 # Make hierarchy (Center, Left, Right)
 parent = None
 for jnt in center_joints:
-    grp, con = create_grp_con(jnt, side="C", radius=1.5)
+    grp, con = create_grp_con(jnt, side="C", radius=16)
     if grp and parent:
         cmds.parent(grp, parent)
     parent = con
 
 parent = None
 for jnt in left_joints:
-    grp, con = create_grp_con(jnt, side="L", radius=1.0)
+    grp, con = create_grp_con(jnt, side="L", radius=8)
     if grp and parent:
         cmds.parent(grp, parent)
     parent = con
 
 parent = None
 for jnt in right_joints:
-    grp, con = create_grp_con(jnt, side="R", radius=1.0)
+    grp, con = create_grp_con(jnt, side="R", radius=8)
     if grp and parent:
         cmds.parent(grp, parent)
     parent = con
