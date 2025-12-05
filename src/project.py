@@ -110,7 +110,12 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     if not cmds.objExists(jnt_name):
         return None, None
 
-    con_name = jnt_name.replace("_JNT", "_CON")
+    if jnt_name in ["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT","L_hip_JNT","L_knee_JNT","L_ankle_JNT",
+                    "R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT","R_hip_JNT","R_knee_JNT","R_ankle_JNT"]:
+        con_name = jnt_name.replace("_JNT", "_FK_CON")
+    else:
+        con_name = jnt_name.replace("_JNT", "_CON")
+
     grp_name = jnt_name.replace("_JNT", "_GRP")
 
     con = cmds.circle(n=con_name, ch=False, o=True, nr=[1,0,0], r=radius)[0]
