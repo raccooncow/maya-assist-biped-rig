@@ -1,4 +1,4 @@
-# note: Maya.cmds is for running this code in maya script editor. Ignore import error.
+# note: Maya.cmds is for running this code in maya script editor. Ignore import error. 
 import maya.cmds as cmds
 
 #
@@ -14,6 +14,7 @@ center_locs = [
     "neck_LOC",
 ]
 left_locs = [
+    "L_clavicle_LOC",
     "L_shoulder_LOC",
     "L_elbow_LOC",
     "L_wrist_LOC",
@@ -26,7 +27,10 @@ parents = {
     "spine02_LOC": "spine01_LOC",
     "spine03_LOC": "spine02_LOC",
     "neck_LOC": "spine03_LOC",
-    "L_shoulder_LOC": "spine03_LOC",
+
+    "L_clavicle_LOC": "spine03_LOC",
+    "L_shoulder_LOC": "L_clavicle_LOC",
+
     "L_elbow_LOC": "L_shoulder_LOC",
     "L_wrist_LOC": "L_elbow_LOC",
     "L_hip_LOC": "pelvis_LOC",
@@ -57,6 +61,10 @@ if joint_map.get("pelvis_LOC"):
     cmds.select(joint_map["pelvis_LOC"], hi=True)
     cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
     cmds.select(clear=True)
+if joint_map.get("L_clavicle_LOC"):
+    cmds.select(joint_map["L_clavicle_LOC"], hi=True)
+    cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
+    cmds.select(clear=True)
 if joint_map.get("L_shoulder_LOC"):
     cmds.select(joint_map["L_shoulder_LOC"], hi=True)
     cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
@@ -68,7 +76,7 @@ if joint_map.get("L_hip_LOC"):
 
 if joint_map.get("L_shoulder_LOC"):
     cmds.mirrorJoint(
-        "L_shoulder_JNT",
+        "L_clavicle_JNT",
         mirrorYZ=True,
         mirrorBehavior=True,
         searchReplace=("L_", "R_")
@@ -102,16 +110,28 @@ COLOR_LEFT = 6
 COLOR_RIGHT = 13
 COLOR_CENTER = 17
 
-center_joints = ["pelvis_JNT", "spine01_JNT", "spine02_JNT", "spine03_JNT", "neck_JNT"]
-left_joints = ["L_shoulder_JNT", "L_elbow_JNT", "L_wrist_JNT", "L_hip_JNT", "L_knee_JNT", "L_ankle_JNT"]
-right_joints = ["R_shoulder_JNT", "R_elbow_JNT", "R_wrist_JNT", "R_hip_JNT", "R_knee_JNT", "R_ankle_JNT"]
+center_joints = [
+    "pelvis_JNT", "spine01_JNT", "spine02_JNT", "spine03_JNT", "neck_JNT"
+]
+
+left_joints = [
+    "L_clavicle_JNT",
+    "L_shoulder_JNT", "L_elbow_JNT", "L_wrist_JNT",
+    "L_hip_JNT", "L_knee_JNT", "L_ankle_JNT"
+]
+
+right_joints = [
+    "R_clavicle_JNT",
+    "R_shoulder_JNT", "R_elbow_JNT", "R_wrist_JNT",
+    "R_hip_JNT", "R_knee_JNT", "R_ankle_JNT"
+]
 
 def create_grp_con(jnt_name, side="C", radius=1.0):
     if not cmds.objExists(jnt_name):
         return None, None
 
-    if jnt_name in ["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT","L_hip_JNT","L_knee_JNT","L_ankle_JNT",
-                    "R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT","R_hip_JNT","R_knee_JNT","R_ankle_JNT"]:
+    if jnt_name.endswith(("shoulder_JNT","elbow_JNT","wrist_JNT",
+                          "hip_JNT","knee_JNT","ankle_JNT","clavicle_JNT")):
         con_name = jnt_name.replace("_JNT", "_FK_CON")
     else:
         con_name = jnt_name.replace("_JNT", "_CON")
@@ -134,9 +154,9 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     cmds.parentConstraint(con, jnt_name)
     return grp, con
 
+# Placement
 placement_con = cmds.circle(n="placement_CON", ch=False, o=True, nr=[0,1,0], r=20)[0]
 placement_grp = cmds.group(placement_con, n="placement_GRP")
-cmds.xform(placement_grp, ws=True, t=[0,0,0])
 cmds.setAttr(placement_con + ".overrideEnabled", 1)
 cmds.setAttr(placement_con + ".overrideColor", COLOR_CENTER)
 
@@ -153,8 +173,8 @@ for jnt in left_joints:
     if grp:
         if jnt == "L_hip_JNT":
             cmds.parent(grp, "pelvis_CON")
-        elif jnt == "L_shoulder_JNT":
-            cmds.parent(grp, "spine02_CON")
+        elif jnt == "L_clavicle_JNT":
+            cmds.parent(grp, "spine03_CON")
         elif parent:
             cmds.parent(grp, parent)
     parent = con
@@ -165,8 +185,8 @@ for jnt in right_joints:
     if grp:
         if jnt == "R_hip_JNT":
             cmds.parent(grp, "pelvis_CON")
-        elif jnt == "R_shoulder_JNT":
-            cmds.parent(grp, "spine02_CON")
+        elif jnt == "R_clavicle_JNT":
+            cmds.parent(grp, "spine03_CON")
         elif parent:
             cmds.parent(grp, parent)
     parent = con
