@@ -1,10 +1,10 @@
 # Maya Assist Biped Rig
 
 ## Demo
-Demo Video: <URL>
+Demo Video: https://youtu.be/MRTdtrCkKII
 
 ## GitHub Repository
-GitHub Repo: <https://github.com/raccooncow/maya-assist-biped-rig.git>
+GitHub Repo: https://github.com/raccooncow/maya-assist-biped-rig.git
 
 ## Description
 This project is a Python script that automates the creation of a basic bipedal rig in Autodesk Maya. It generates joints, FK/IK systems for arms and legs, and organizes everything into a clean hierarchy. By placing center and left-side locators, the script will create joints, mirror them to the right side, and generate controls for each joint, making the rig almost ready for animation. All the user has to do is place key locators at the following positions:
