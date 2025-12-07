@@ -1,5 +1,6 @@
 # note: Maya.cmds is for running this code in maya script editor. Ignore import error. 
 import maya.cmds as cmds
+import math
 
 #
 # PHASE 1 : Using markers to create basic biped heriarchy, groups, joints, joint heirarchy,
@@ -293,3 +294,4 @@ def create_arm_pv_control(shoulder_jnt, elbow_jnt, wrist_jnt, ikh, prefix, side_
 #   Parent PV grp under placement_CON
 create_arm_pv_control("L_shoulder_ik_JNT","L_elbow_ik_JNT","L_wrist_ik_JNT",L_arm_IKH,"L_arm",COLOR_LEFT,1.0)
 create_arm_pv_control("R_shoulder_ik_JNT","R_elbow_ik_JNT","R_wrist_ik_JNT",R_arm_IKH,"R_arm",COLOR_RIGHT,1.0)
+
