@@ -208,6 +208,19 @@ def duplicate_for_IK(joints):
         cmds.parent(new[i],new[i-1])
     return new
 
+# FK chains
+def duplicate_for_FK(joints):
+    new = []
+    for j in joints:
+        if not cmds.objExists(j): continue
+        FK_name = j.replace("_JNT","_FK_JNT")
+        dup = cmds.duplicate(j, po=True, n=FK_name)[0]
+        cmds.parent(dup, w=True)
+        new.append(dup)
+    for i in range(1,len(new)):
+        cmds.parent(new[i], new[i-1])
+    return new
+
 left_arm_fk  = ["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT"]
 right_arm_fk = ["R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT"]
 left_leg_fk  = ["L_hip_JNT","L_knee_JNT","L_ankle_JNT"]
@@ -217,6 +230,13 @@ L_arm_IK  = duplicate_for_IK(left_arm_fk)
 R_arm_IK  = duplicate_for_IK(right_arm_fk)
 L_leg_IK  = duplicate_for_IK(left_leg_fk)
 R_leg_IK  = duplicate_for_IK(right_leg_fk)
+
+# Call fk func
+L_arm_FK  = duplicate_for_FK(left_arm_fk)
+R_arm_FK  = duplicate_for_FK(right_arm_fk)
+L_leg_FK  = duplicate_for_FK(left_leg_fk)
+R_leg_FK  = duplicate_for_FK(right_leg_fk)
+
 
 def make_IKH(start,end,name_prefix):
     IKH_name = name_prefix + "_IKH"
