@@ -385,6 +385,10 @@ if cmds.objExists(placement_grp):
     cmds.parent(placement_grp, CON_GRP_NAME)
 
 # Parent groups under master group
-
+cmds.parent(LOC_GRP_NAME, MASTER_GRP_NAME)
+cmds.parent(JNT_GRP_NAME, MASTER_GRP_NAME)
+cmds.parent(CON_GRP_NAME, MASTER_GRP_NAME)
 
 # Parent the existing 'geometry_GRP' to master if it exists in the scene
+if cmds.objExists(GEO_GRP_NAME):
+    cmds.parent(GEO_GRP_NAME, MASTER_GRP_NAME)
