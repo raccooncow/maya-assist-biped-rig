@@ -196,8 +196,21 @@ for jnt in right_joints:
 #
 
 # Duplicate FK joints for each arm and leg to make IK joint chains
+def duplicate_for_ik(joints):
+    new = []
+    for j in joints:
+        if not cmds.objExists(j): continue
 # Rename it to _ik_JNT
+        ik_name = j.replace("_JNT","_ik_JNT")
 # Parent duplicate like FK chain
+        dup = cmds.duplicate(j,po=True,n=ik_name)[0]
+        cmds.parent(dup,w=True)
+        new.append(dup)
+    for i in range(1,len(new)):
+        cmds.parent(new[i],new[i-1])
+    return new
+
+
 
 # Create IKH for each chain
 
