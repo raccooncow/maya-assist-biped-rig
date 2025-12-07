@@ -44,6 +44,6 @@ The script was designed for quick rig setup for animation purposes. The emphasis
 ### File Structure
 project.py – The Python script that generates the basic bipedal rig.
 
-requirements.txt – Libraries and needed information for the program to function.
+requirements.txt – Libraries that are neccessary for code.
 
 README.md – Project overview, instructions, and descriptions.
