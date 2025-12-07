@@ -210,7 +210,15 @@ def duplicate_for_ik(joints):
         cmds.parent(new[i],new[i-1])
     return new
 
+left_arm_fk  = ["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT"]
+right_arm_fk = ["R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT"]
+left_leg_fk  = ["L_hip_JNT","L_knee_JNT","L_ankle_JNT"]
+right_leg_fk = ["R_hip_JNT","R_knee_JNT","R_ankle_JNT"]
 
+L_arm_ik  = duplicate_for_ik(left_arm_fk)
+R_arm_ik  = duplicate_for_ik(right_arm_fk)
+L_leg_ik  = duplicate_for_ik(left_leg_fk)
+R_leg_ik  = duplicate_for_ik(right_leg_fk)
 
 # Create IKH for each chain
 
