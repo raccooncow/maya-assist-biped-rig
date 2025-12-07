@@ -1,11 +1,5 @@
-# note: Maya.cmds is for running this code in maya script editor. Ignore import error. 
 import maya.cmds as cmds
 import math
-
-#
-# PHASE 1 : Using markers to create basic biped heriarchy, groups, joints, joint heirarchy,
-# and orienting joints. (No hands, feet, or head)
-#
 
 center_locs = [
     "pelvis_LOC",
@@ -84,11 +78,6 @@ def fix_end_joint(jnt):
 
 for end_jnt in ["neck_JNT", "L_ankle_JNT", "R_ankle_JNT"]:
     fix_end_joint(end_jnt)
-
-#
-# PHASE 2 : Creating NURBS controls for each joint, setting colors, and building a basic 
-# control hierarchy.
-#
 
 COLOR_LEFT = 6
 COLOR_RIGHT = 13
@@ -182,11 +171,6 @@ for jnt in right_joints:
             try: cmds.parent(grp, parent)
             except: pass
     parent = con
-
-#
-# PHASE 3 : Build IK chains, create corrctly positioned and bold IK controls for 
-# arms and legs, and add pole vector controls for elbows.
-#
 
 def duplicate_for_IK(joints):
     new = []
@@ -349,10 +333,6 @@ connect_fk_controls_and_clean(["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT"], L_
 connect_fk_controls_and_clean(["R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT"], R_arm_FK)
 connect_fk_controls_and_clean(["L_hip_JNT","L_knee_JNT","L_ankle_JNT"], L_leg_FK)
 connect_fk_controls_and_clean(["R_hip_JNT","R_knee_JNT","R_ankle_JNT"], R_leg_FK)
-
-#
-# PHASE 4 : Final Grouping and Organization
-#
 
 MASTER_GRP_NAME = "master"
 LOC_GRP_NAME = "locator_GRP"
