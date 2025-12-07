@@ -272,5 +272,23 @@ if cmds.objExists("placement_CON"):
     except: pass
 
 def create_arm_pv_control(shoulder_jnt, elbow_jnt, wrist_jnt, ikh, prefix, side_color, offset_scale=1.0):
-    S = cmds.xform
-
+    S = cmds.xform(shoulder_jnt, q=True, ws=True, t=True)
+    E = cmds.xform(elbow_jnt, q=True, ws=True, t=True)
+    W = cmds.xform(wrist_jnt, q=True, ws=True, t=True)
+    arm_len = math.sqrt(sum((W[i]-S[i])**2 for i in range(3)))
+    PV_pos = [E[0], E[1], E[2] - arm_len * offset_scale]
+    ctrl_name = prefix + "_pv_IK_CON"
+    grp_name = prefix + "_pv_IK_GRP"
+    if cmds.objExists(ctrl_name): cmds.delete(ctrl_name)
+    if cmds.objExists(grp_name): cmds.delete(grp_name)
+    pv_ctrl = cmds.circle(n=ctrl_name, ch=False, o=True, nr=[1,0,0], r=2.0)[0]
+    pv_grp = cmds.group(pv_ctrl, n=grp_name)
+    cmds.xform(pv_grp, ws=True, t=PV_pos)
+    cmds.setAttr(pv_ctrl + ".overrideEnabled", 1)
+    cmds.setAttr(pv_ctrl + ".overrideColor", side_color)
+    cmds.poleVectorConstraint(pv_ctrl, ikh)
+    if cmds.objExists("placement_CON"):
+        cmds.parent(pv_grp, "placement_CON")
+    return pv_grp, pv_ctrl
+create_arm_pv_control("L_shoulder_IK_JNT","L_elbow_IK_JNT","L_wrist_IK_JNT",L_arm_IKH,"L_arm",COLOR_LEFT,1.0)
+create_arm_pv_control("R_shoulder_IK_JNT","R_elbow_IK_JNT","R_wrist_IK_JNT",R_arm_IKH,"R_arm",COLOR_RIGHT,1.0)
