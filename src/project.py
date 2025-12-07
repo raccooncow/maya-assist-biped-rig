@@ -355,9 +355,17 @@ connect_fk_controls_and_clean(["R_hip_JNT","R_knee_JNT","R_ankle_JNT"], R_leg_FK
 #
 
 # Define group names
+MASTER_GRP_NAME = "master"
+LOC_GRP_NAME = "locator_GRP"
+JNT_GRP_NAME = "joints_GRP"
+CON_GRP_NAME = "controls_GRP"
+GEO_GRP_NAME = "geometry_GRP"
 
 # Create groups if they don't exist
-
+for grp_name in [MASTER_GRP_NAME, LOC_GRP_NAME, JNT_GRP_NAME, CON_GRP_NAME]:
+    if not cmds.objExists(grp_name):
+        cmds.group(empty=True, name=grp_name)
+        
 # Place locators into locator_GRP
 
 # Pelvis joint chain in joint_GRP
