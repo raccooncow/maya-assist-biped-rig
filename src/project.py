@@ -264,13 +264,25 @@ if cmds.objExists("placement_CON"):
         cmds.parent(L_leg_grp,"placement_CON")
         cmds.parent(R_leg_grp,"placement_CON")
     except: pass
-    
+
 
 # Create arm PV con
+def create_arm_pv_control(shoulder_jnt, elbow_jnt, wrist_jnt, ikh, prefix, side_color, offset_scale=1.0):
 #   To calculate PV position:
 #       Level with elbow
 #       Push back along negative Z
+    S = cmds.xform(shoulder_jnt,q=True,ws=True,t=True)
+    E = cmds.xform(elbow_jnt,q=True,ws=True,t=True)
+    W = cmds.xform(wrist_jnt,q=True,ws=True,t=True)
+    PV_pos = [E[0], E[1], E[2] - math.sqrt(sum((W[i]-S[i])**2 for i in range(3)))*offset_scale]
 #   Create con circle and grp
+    ctrl_name = prefix+"_pv_CON"
+    grp_name = prefix+"_pv_GRP"
+    if cmds.objExists(ctrl_name): cmds.delete(ctrl_name)
+    if cmds.objExists(grp_name): cmds.delete(grp_name)
+    pv_ctrl = cmds.circle(n=ctrl_name,ch=False,o=True,nr=[1,0,0],r=2.0)[0]
+    pv_grp = cmds.group(pv_ctrl,n=grp_name)
+    cmds.xform(pv_grp,ws=True,t=PV_pos)
 #   Set color
 #   Constrain PV con to IKH
 #   Parent PV grp under placement_CON
