@@ -250,11 +250,13 @@ def make_ik_ctrl_upright_thick(name_prefix,target_ikh,color=17,radius=6,thicknes
     cmds.setAttr(shape+".lineWidth",thickness)
     return grp,con
 
+# Apply to arm and leg IKH
 L_arm_grp,L_arm_con = make_ik_ctrl_upright_thick("L_arm",L_arm_IKH,COLOR_LEFT,6,3)
 R_arm_grp,R_arm_con = make_ik_ctrl_upright_thick("R_arm",R_arm_IKH,COLOR_RIGHT,6,3)
 L_leg_grp,L_leg_con = make_ik_ctrl_upright_thick("L_leg",L_leg_IKH,COLOR_LEFT,6,3)
 R_leg_grp,R_leg_con = make_ik_ctrl_upright_thick("R_leg",R_leg_IKH,COLOR_RIGHT,6,3)
 
+# Parent IK con grps under placement_CON
 if cmds.objExists("placement_CON"):
     try:
         cmds.parent(L_arm_grp,"placement_CON")
@@ -262,8 +264,7 @@ if cmds.objExists("placement_CON"):
         cmds.parent(L_leg_grp,"placement_CON")
         cmds.parent(R_leg_grp,"placement_CON")
     except: pass
-# Apply to arm and leg IKH
-# Parent IK con grps under placement_CON
+    
 
 # Create arm PV con
 #   To calculate PV position:
