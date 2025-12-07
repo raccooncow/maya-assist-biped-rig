@@ -194,3 +194,28 @@ for jnt in right_joints:
 # PHASE 3 : Build IK chains, create corrctly positioned and bold IK controls for 
 # arms and legs, and add pole vector controls for elbows.
 #
+
+# Duplicate FK joints for each arm and leg to make IK joint chains
+# Rename it to _ik_JNT
+# Parent duplicate like FK chain
+
+# Create IKH for each chain
+
+# Define function to create IK con for a target IK handle:
+#   Create con circle
+#   Make con bold
+#   Set color
+#   Grp
+#   Parent under the con
+
+# Apply to arm and leg IKH
+# Parent IK con grps under placement_CON
+
+# Create arm PV con
+#   To calculate PV position:
+#       Level with elbow
+#       Push back along negative Z
+#   Create con circle and grp
+#   Set color
+#   Constrain PV con to IKH
+#   Parent PV grp under placement_CON
