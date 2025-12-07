@@ -354,19 +354,16 @@ connect_fk_controls_and_clean(["R_hip_JNT","R_knee_JNT","R_ankle_JNT"], R_leg_FK
 # PHASE 4 : Final Grouping and Organization
 #
 
-# Define group names
 MASTER_GRP_NAME = "master"
 LOC_GRP_NAME = "locator_GRP"
 JNT_GRP_NAME = "joints_GRP"
 CON_GRP_NAME = "controls_GRP"
 GEO_GRP_NAME = "geometry_GRP"
 
-# Create groups if they don't exist
 for grp_name in [MASTER_GRP_NAME, LOC_GRP_NAME, JNT_GRP_NAME, CON_GRP_NAME]:
     if not cmds.objExists(grp_name):
         cmds.group(empty=True, name=grp_name)
 
-# Place locators into locator_GRP
 all_locators = center_locs + left_locs
 for loc in all_locators:
     if cmds.objExists(loc):
@@ -374,21 +371,17 @@ for loc in all_locators:
             cmds.parent(loc, world=True)
         cmds.parent(loc, LOC_GRP_NAME)
 
-# Pelvis joint chain in joint_GRP
 if cmds.objExists("pelvis_JNT"):
     if cmds.listRelatives("pelvis_JNT", parent=True):
          cmds.parent("pelvis_JNT", world=True)
     cmds.parent("pelvis_JNT", JNT_GRP_NAME)
 
-# Placement_GRP into control_GRP
 if cmds.objExists(placement_grp):
     cmds.parent(placement_grp, CON_GRP_NAME)
 
-# Parent groups under master group
 cmds.parent(LOC_GRP_NAME, MASTER_GRP_NAME)
 cmds.parent(JNT_GRP_NAME, MASTER_GRP_NAME)
 cmds.parent(CON_GRP_NAME, MASTER_GRP_NAME)
 
-# Parent the existing 'geometry_GRP' to master if it exists in the scene
 if cmds.objExists(GEO_GRP_NAME):
     cmds.parent(GEO_GRP_NAME, MASTER_GRP_NAME)
