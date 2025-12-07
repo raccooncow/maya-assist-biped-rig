@@ -221,6 +221,15 @@ L_leg_ik  = duplicate_for_ik(left_leg_fk)
 R_leg_ik  = duplicate_for_ik(right_leg_fk)
 
 # Create IKH for each chain
+def make_ikh(start,end,name_prefix):
+    ikh_name = name_prefix + "_IKH"
+    ikh,eff = cmds.ikHandle(n=ikh_name,sj=start,ee=end,sol="ikRPsolver")
+    return ikh
+
+L_arm_IKH = make_ikh(L_arm_ik[0],L_arm_ik[-1],"L_arm")
+R_arm_IKH = make_ikh(R_arm_ik[0],R_arm_ik[-1],"R_arm")
+L_leg_IKH = make_ikh(L_leg_ik[0],L_leg_ik[-1],"L_leg")
+R_leg_IKH = make_ikh(R_leg_ik[0],R_leg_ik[-1],"R_leg")
 
 # Define function to create IK con for a target IK handle:
 #   Create con circle
