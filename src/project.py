@@ -58,37 +58,21 @@ for loc, parent_loc in parents.items():
     if joint_map.get(loc) and joint_map.get(parent_loc):
         cmds.parent(joint_map[loc], joint_map[parent_loc])
 
-if joint_map.get("pelvis_LOC"):
-    cmds.select(joint_map["pelvis_LOC"], hi=True)
-    cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
-    cmds.select(clear=True)
-if joint_map.get("L_clavicle_LOC"):
-    cmds.select(joint_map["L_clavicle_LOC"], hi=True)
-    cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
-    cmds.select(clear=True)
-if joint_map.get("L_shoulder_LOC"):
-    cmds.select(joint_map["L_shoulder_LOC"], hi=True)
-    cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
-    cmds.select(clear=True)
-if joint_map.get("L_hip_LOC"):
-    cmds.select(joint_map["L_hip_LOC"], hi=True)
-    cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
-    cmds.select(clear=True)
+for orient_jnt in ["pelvis_LOC", "L_clavicle_LOC", "L_shoulder_LOC", "L_hip_LOC"]:
+    if joint_map.get(orient_jnt):
+        cmds.select(joint_map[orient_jnt], hi=True)
+        cmds.joint(e=True, orientJoint="xyz", secondaryAxisOrient="yup", zeroScaleOrient=True)
+        cmds.select(clear=True)
 
-if joint_map.get("L_shoulder_LOC"):
-    cmds.mirrorJoint(
-        "L_clavicle_JNT",
-        mirrorYZ=True,
-        mirrorBehavior=True,
-        searchReplace=("L_", "R_")
-    )
-if joint_map.get("L_hip_LOC"):
-    cmds.mirrorJoint(
-        "L_hip_JNT",
-        mirrorYZ=True,
-        mirrorBehavior=True,
-        searchReplace=("L_", "R_")
-    )
+for mirror_jnt in ["L_clavicle_JNT", "L_hip_JNT"]:
+    if cmds.objExists(mirror_jnt):
+        mirror_name = "R_" + mirror_jnt[2:]
+        cmds.mirrorJoint(
+            mirror_jnt,
+            mirrorYZ=True,
+            mirrorBehavior=True,
+            searchReplace=("L_", "R_")
+        )
 
 def fix_end_joint(jnt):
     if not cmds.objExists(jnt):
@@ -98,9 +82,8 @@ def fix_end_joint(jnt):
     cmds.delete(tmp)
     cmds.makeIdentity(jnt, apply=True, jointOrient=True)
 
-fix_end_joint("neck_JNT")
-fix_end_joint("L_ankle_JNT")
-fix_end_joint("R_ankle_JNT")
+for end_jnt in ["neck_JNT", "L_ankle_JNT", "R_ankle_JNT"]:
+    fix_end_joint(end_jnt)
 
 #
 # PHASE 2 : Creating NURBS controls for each joint, setting colors, and building a basic 
@@ -130,19 +113,22 @@ right_joints = [
 def create_grp_con(jnt_name, side="C", radius=1.0):
     if not cmds.objExists(jnt_name):
         return None, None
-
-    if jnt_name.endswith(("shoulder_JNT","elbow_JNT","wrist_JNT",
-                          "hip_JNT","knee_JNT","ankle_JNT")):
-        con_name = jnt_name.replace("_JNT", "_FK_CON")
+    if jnt_name.endswith("_FK_JNT"):
+        con_name = jnt_name.replace("_FK_JNT", "_FK_CON")
+        grp_name = jnt_name.replace("_FK_JNT", "_FK_GRP")
+        target_joint = jnt_name
     else:
-        con_name = jnt_name.replace("_JNT", "_CON")
-
-    grp_name = jnt_name.replace("_JNT", "_GRP")
+        if jnt_name.endswith(("shoulder_JNT","elbow_JNT","wrist_JNT",
+                              "hip_JNT","knee_JNT","ankle_JNT")):
+            con_name = jnt_name.replace("_JNT", "_FK_CON")
+        else:
+            con_name = jnt_name.replace("_JNT", "_CON")
+        grp_name = jnt_name.replace("_JNT", "_GRP")
+        target_joint = jnt_name
 
     con = cmds.circle(n=con_name, ch=False, o=True, nr=[1,0,0], r=radius)[0]
     grp = cmds.group(con, n=grp_name)
-
-    cmds.delete(cmds.parentConstraint(jnt_name, grp))
+    cmds.delete(cmds.parentConstraint(target_joint, grp))
 
     cmds.setAttr(con + ".overrideEnabled", 1)
     if side == "L":
@@ -152,7 +138,7 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     else:
         cmds.setAttr(con + ".overrideColor", COLOR_CENTER)
 
-    cmds.parentConstraint(con, jnt_name)
+    cmds.parentConstraint(con, target_joint)
     return grp, con
 
 placement_con = cmds.circle(n="placement_CON", ch=False, o=True, nr=[0,1,0], r=20)[0]
@@ -172,11 +158,14 @@ for jnt in left_joints:
     grp, con = create_grp_con(jnt, side="L", radius=8)
     if grp:
         if jnt == "L_hip_JNT":
-            cmds.parent(grp, "pelvis_CON")
+            try: cmds.parent(grp, "pelvis_CON")
+            except: pass
         elif jnt == "L_clavicle_JNT":
-            cmds.parent(grp, "spine03_CON")
+            try: cmds.parent(grp, "spine03_CON")
+            except: pass
         elif parent:
-            cmds.parent(grp, parent)
+            try: cmds.parent(grp, parent)
+            except: pass
     parent = con
 
 parent = None
@@ -184,11 +173,14 @@ for jnt in right_joints:
     grp, con = create_grp_con(jnt, side="R", radius=8)
     if grp:
         if jnt == "R_hip_JNT":
-            cmds.parent(grp, "pelvis_CON")
+            try: cmds.parent(grp, "pelvis_CON")
+            except: pass
         elif jnt == "R_clavicle_JNT":
-            cmds.parent(grp, "spine03_CON")
+            try: cmds.parent(grp, "spine03_CON")
+            except: pass
         elif parent:
-            cmds.parent(grp, parent)
+            try: cmds.parent(grp, parent)
+            except: pass
     parent = con
 
 #
@@ -201,11 +193,15 @@ def duplicate_for_IK(joints):
     for j in joints:
         if not cmds.objExists(j): continue
         IK_name = j.replace("_JNT","_IK_JNT")
+        if cmds.objExists(IK_name):
+            try: cmds.delete(IK_name)
+            except: pass
         dup = cmds.duplicate(j,po=True,n=IK_name)[0]
         cmds.parent(dup,w=True)
         new.append(dup)
     for i in range(1,len(new)):
-        cmds.parent(new[i],new[i-1])
+        try: cmds.parent(new[i],new[i-1])
+        except: pass
     return new
 
 def duplicate_for_FK(joints):
@@ -213,11 +209,15 @@ def duplicate_for_FK(joints):
     for j in joints:
         if not cmds.objExists(j): continue
         FK_name = j.replace("_JNT","_FK_JNT")
+        if cmds.objExists(FK_name):
+            try: cmds.delete(FK_name)
+            except: pass
         dup = cmds.duplicate(j, po=True, n=FK_name)[0]
         cmds.parent(dup, w=True)
         new.append(dup)
     for i in range(1,len(new)):
-        cmds.parent(new[i], new[i-1])
+        try: cmds.parent(new[i], new[i-1])
+        except: pass
     return new
 
 left_arm_fk  = ["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT"]
@@ -235,27 +235,56 @@ R_arm_FK  = duplicate_for_FK(right_arm_fk)
 L_leg_FK  = duplicate_for_FK(left_leg_fk)
 R_leg_FK  = duplicate_for_FK(right_leg_fk)
 
+try:
+    if L_arm_FK and cmds.objExists("L_clavicle_JNT"):
+        cmds.parent(L_arm_FK[0], "L_clavicle_JNT")
+    if R_arm_FK and cmds.objExists("R_clavicle_JNT"):
+        cmds.parent(R_arm_FK[0], "R_clavicle_JNT")
+    if L_arm_IK and cmds.objExists("L_clavicle_JNT"):
+        cmds.parent(L_arm_IK[0], "L_clavicle_JNT")
+    if R_arm_IK and cmds.objExists("R_clavicle_JNT"):
+        cmds.parent(R_arm_IK[0], "R_clavicle_JNT")
+    if L_leg_FK and cmds.objExists("pelvis_JNT"):
+        cmds.parent(L_leg_FK[0], "pelvis_JNT")
+    if R_leg_FK and cmds.objExists("pelvis_JNT"):
+        cmds.parent(R_leg_FK[0], "pelvis_JNT")
+    if L_leg_IK and cmds.objExists("pelvis_JNT"):
+        cmds.parent(L_leg_IK[0], "pelvis_JNT")
+    if R_leg_IK and cmds.objExists("pelvis_JNT"):
+        cmds.parent(R_leg_IK[0], "pelvis_JNT")
+except:
+    pass
 def make_IKH(start,end,name_prefix):
     IKH_name = name_prefix + "_IKH"
     ikh,eff = cmds.ikHandle(n=IKH_name,sj=start,ee=end,sol="ikRPsolver")
     return ikh
 
-L_arm_IKH = make_IKH(L_arm_IK[0],L_arm_IK[-1],"L_arm")
-R_arm_IKH = make_IKH(R_arm_IK[0],R_arm_IK[-1],"R_arm")
-L_leg_IKH = make_IKH(L_leg_IK[0],L_leg_IK[-1],"L_leg")
-R_leg_IKH = make_IKH(R_leg_IK[0],R_leg_IK[-1],"R_leg")
+L_arm_IKH = make_IKH(L_arm_IK[0],L_arm_IK[-1],"L_arm") if L_arm_IK else None
+R_arm_IKH = make_IKH(R_arm_IK[0],R_arm_IK[-1],"R_arm") if R_arm_IK else None
+L_leg_IKH = make_IKH(L_leg_IK[0],L_leg_IK[-1],"L_leg") if L_leg_IK else None
+R_leg_IKH = make_IKH(R_leg_IK[0],R_leg_IK[-1],"R_leg") if R_leg_IK else None
 
 def make_IK_ctrl(name_prefix, target_ikh, color=17, radius=6, thickness=3, normal=[1,0,0]):
     con_name = name_prefix + "_IK_CON"
     grp_name = name_prefix + "_IK_GRP"
+    if cmds.objExists(con_name):
+        try: cmds.delete(con_name)
+        except: pass
+    if cmds.objExists(grp_name):
+        try: cmds.delete(grp_name)
+        except: pass
     con = cmds.circle(n=con_name, ch=False, o=True, nr=normal, r=radius)[0]
     grp = cmds.group(con, n=grp_name)
-    cmds.delete(cmds.parentConstraint(target_ikh, grp))
-    cmds.parent(target_ikh, con)
+    if target_ikh:
+        cmds.delete(cmds.parentConstraint(target_ikh, grp))
+        cmds.parent(target_ikh, con)
     cmds.setAttr(con+".overrideEnabled", 1)
     cmds.setAttr(con+".overrideColor", color)
-    shape = cmds.listRelatives(con, shapes=True)[0]
-    cmds.setAttr(shape+".lineWidth", thickness)
+    try:
+        shape = cmds.listRelatives(con, shapes=True)[0]
+        cmds.setAttr(shape+".lineWidth", thickness)
+    except:
+        pass
     return grp, con
 
 L_arm_grp, L_arm_con = make_IK_ctrl("L_arm", L_arm_IKH, COLOR_LEFT, 6, 3, normal=[1,0,0])
@@ -286,9 +315,37 @@ def create_arm_pv_control(shoulder_jnt, elbow_jnt, wrist_jnt, ikh, prefix, side_
     cmds.xform(pv_grp, ws=True, t=PV_pos)
     cmds.setAttr(pv_ctrl + ".overrideEnabled", 1)
     cmds.setAttr(pv_ctrl + ".overrideColor", side_color)
-    cmds.poleVectorConstraint(pv_ctrl, ikh)
+    if ikh:
+        cmds.poleVectorConstraint(pv_ctrl, ikh)
     if cmds.objExists("placement_CON"):
         cmds.parent(pv_grp, "placement_CON")
     return pv_grp, pv_ctrl
-create_arm_pv_control("L_shoulder_IK_JNT","L_elbow_IK_JNT","L_wrist_IK_JNT",L_arm_IKH,"L_arm",COLOR_LEFT,1.0)
-create_arm_pv_control("R_shoulder_IK_JNT","R_elbow_IK_JNT","R_wrist_IK_JNT",R_arm_IKH,"R_arm",COLOR_RIGHT,1.0)
+
+if L_arm_IKH:
+    create_arm_pv_control("L_shoulder_IK_JNT","L_elbow_IK_JNT","L_wrist_IK_JNT",L_arm_IKH,"L_arm",COLOR_LEFT,1.0)
+if R_arm_IKH:
+    create_arm_pv_control("R_shoulder_IK_JNT","R_elbow_IK_JNT","R_wrist_IK_JNT",R_arm_IKH,"R_arm",COLOR_RIGHT,1.0)
+
+def connect_fk_controls_and_clean(orig_jnt_list, fk_jnt_list):
+    for orig_jnt, fk_jnt in zip(orig_jnt_list, fk_jnt_list):
+        if not cmds.objExists(fk_jnt):
+            continue
+        con = orig_jnt.replace("_JNT", "_FK_CON")
+        if cmds.objExists(orig_jnt):
+            pcs = cmds.listRelatives(orig_jnt, type='parentConstraint') or []
+            for pc in pcs:
+                try: cmds.delete(pc)
+                except: pass
+        if con and cmds.objExists(fk_jnt):
+            existing = cmds.listRelatives(fk_jnt, type='parentConstraint') or []
+            for pc in existing:
+                try: cmds.delete(pc)
+                except: pass
+            try:
+                cmds.parentConstraint(con, fk_jnt, mo=True)
+            except:
+                pass
+connect_fk_controls_and_clean(["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT"], L_arm_FK)
+connect_fk_controls_and_clean(["R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT"], R_arm_FK)
+connect_fk_controls_and_clean(["L_hip_JNT","L_knee_JNT","L_ankle_JNT"], L_leg_FK)
+connect_fk_controls_and_clean(["R_hip_JNT","R_knee_JNT","R_ankle_JNT"], R_leg_FK)
