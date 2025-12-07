@@ -365,13 +365,26 @@ GEO_GRP_NAME = "geometry_GRP"
 for grp_name in [MASTER_GRP_NAME, LOC_GRP_NAME, JNT_GRP_NAME, CON_GRP_NAME]:
     if not cmds.objExists(grp_name):
         cmds.group(empty=True, name=grp_name)
-        
+
 # Place locators into locator_GRP
+all_locators = center_locs + left_locs
+for loc in all_locators:
+    if cmds.objExists(loc):
+        if cmds.listRelatives(loc, parent=True):
+            cmds.parent(loc, world=True)
+        cmds.parent(loc, LOC_GRP_NAME)
 
 # Pelvis joint chain in joint_GRP
+if cmds.objExists("pelvis_JNT"):
+    if cmds.listRelatives("pelvis_JNT", parent=True):
+         cmds.parent("pelvis_JNT", world=True)
+    cmds.parent("pelvis_JNT", JNT_GRP_NAME)
 
 # Placement_GRP into control_GRP
+if cmds.objExists(placement_grp):
+    cmds.parent(placement_grp, CON_GRP_NAME)
 
 # Parent groups under master group
+
 
 # Parent the existing 'geometry_GRP' to master if it exists in the scene
