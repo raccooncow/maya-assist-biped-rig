@@ -349,3 +349,21 @@ connect_fk_controls_and_clean(["L_shoulder_JNT","L_elbow_JNT","L_wrist_JNT"], L_
 connect_fk_controls_and_clean(["R_shoulder_JNT","R_elbow_JNT","R_wrist_JNT"], R_arm_FK)
 connect_fk_controls_and_clean(["L_hip_JNT","L_knee_JNT","L_ankle_JNT"], L_leg_FK)
 connect_fk_controls_and_clean(["R_hip_JNT","R_knee_JNT","R_ankle_JNT"], R_leg_FK)
+
+#
+# PHASE 4 : Final Grouping and Organization
+#
+
+# Define group names
+
+# Create groups if they don't exist
+
+# Place locators into locator_GRP
+
+# Pelvis joint chain in joint_GRP
+
+# Placement_GRP into control_GRP
+
+# Parent groups under master group
+
+# Parent the existing 'geometry_GRP' to master if it exists in the scene
