@@ -132,7 +132,7 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
         return None, None
 
     if jnt_name.endswith(("shoulder_JNT","elbow_JNT","wrist_JNT",
-                          "hip_JNT","knee_JNT","ankle_JNT","clavicle_JNT")):
+                          "hip_JNT","knee_JNT","ankle_JNT")):
         con_name = jnt_name.replace("_JNT", "_FK_CON")
     else:
         con_name = jnt_name.replace("_JNT", "_CON")
@@ -208,7 +208,6 @@ def duplicate_for_IK(joints):
         cmds.parent(new[i],new[i-1])
     return new
 
-# FK chains
 def duplicate_for_FK(joints):
     new = []
     for j in joints:
@@ -231,12 +230,10 @@ R_arm_IK  = duplicate_for_IK(right_arm_fk)
 L_leg_IK  = duplicate_for_IK(left_leg_fk)
 R_leg_IK  = duplicate_for_IK(right_leg_fk)
 
-# Call fk func
 L_arm_FK  = duplicate_for_FK(left_arm_fk)
 R_arm_FK  = duplicate_for_FK(right_arm_fk)
 L_leg_FK  = duplicate_for_FK(left_leg_fk)
 R_leg_FK  = duplicate_for_FK(right_leg_fk)
-
 
 def make_IKH(start,end,name_prefix):
     IKH_name = name_prefix + "_IKH"
