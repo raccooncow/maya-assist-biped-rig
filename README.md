@@ -40,3 +40,10 @@ When the locators are placed, when running the script in Maya's "Script Editor" 
 
 ### Design Considerations
 The script was designed for quick rig setup for animation purposes. The emphasis is on automation, clean hierarchies, and easy extensibility. Users only need to place locators to define joint positions; the script handles the rest. For future implementation, I would include hand, finger, and facial rig automation. I may also consider adding a user interface for easier execution and parameter customization. With all that being said, this project was meant to demonstrate how Python scripting can simplify time-intensive tasks in Maya.
+
+### File Structure
+project.py – The Python script that generates the basic bipedal rig.
+
+requirements.txt – Libraries and needed information for program to function.
+
+README.md – Project overview, instructions, and descriptions.
