@@ -154,7 +154,6 @@ def create_grp_con(jnt_name, side="C", radius=1.0):
     cmds.parentConstraint(con, jnt_name)
     return grp, con
 
-# Placement
 placement_con = cmds.circle(n="placement_CON", ch=False, o=True, nr=[0,1,0], r=20)[0]
 placement_grp = cmds.group(placement_con, n="placement_GRP")
 cmds.setAttr(placement_con + ".overrideEnabled", 1)
@@ -190,3 +189,8 @@ for jnt in right_joints:
         elif parent:
             cmds.parent(grp, parent)
     parent = con
+
+#
+# PHASE 3 : Build IK chains, create corrctly positioned and bold IK controls for 
+# arms and legs, and add pole vector controls for elbows.
+#
