@@ -7,9 +7,7 @@ Demo Video: <URL>
 GitHub Repo: <https://github.com/raccooncow/maya-assist-biped-rig.git>
 
 ## Description
-This project is a Python script that automates the creation of a basic bipedal rig in Autodesk Maya. It generates joints, FK/IK systems for arms and legs, and organizes everything into a clean hierarchy. By placing center and left-side locators, the script will create joints, mirror them to the right side, and generate controls for each joint, making the rig almost ready for animation.  
-
-*All the user has to do is place key locators at the following positions:*
+This project is a Python script that automates the creation of a basic bipedal rig in Autodesk Maya. It generates joints, FK/IK systems for arms and legs, and organizes everything into a clean hierarchy. By placing center and left-side locators, the script will create joints, mirror them to the right side, and generate controls for each joint, making the rig almost ready for animation. All the user has to do is place key locators at the following positions:
 
 **Center Locators:**
   pelvis_LOC, 
@@ -41,3 +39,4 @@ When the locators are placed, when running the script in Maya's "Script Editor" 
  - Hierarchy Organization: Create groups for joints, locators, controls, and geometry, and add all to master group for clean organization.
 
 ### Design Considerations
+The script was designed for quick rig setup for animation purposes. The emphasis is on automation, clean hierarchies, and easy extensibility. Users only need to place locators to define joint positions; the script handles the rest. For future implementation, I would include hand, finger, and facial rig automation. I may also consider adding a user interface for easier execution and parameter customization. With all that being said, this project was meant to demonstrate how Python scripting can simplify time-intensive tasks in Maya.
