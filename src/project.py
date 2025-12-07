@@ -228,23 +228,23 @@ R_arm_IKH = make_ikh(R_arm_ik[0],R_arm_ik[-1],"R_arm")
 L_leg_IKH = make_ikh(L_leg_ik[0],L_leg_ik[-1],"L_leg")
 R_leg_IKH = make_ikh(R_leg_ik[0],R_leg_ik[-1],"R_leg")
 
-def make_ik_ctrl_upright_thick(name_prefix,target_ikh,color=17,radius=6,thickness=3):
+def make_ik_ctrl(name_prefix, target_ikh, color=17, radius=6, thickness=3, normal=[1,0,0]):
     con_name = name_prefix + "_ik_CON"
     grp_name = name_prefix + "_ik_GRP"
-    con = cmds.circle(n=con_name,ch=False,o=True,nr=[1,0,0],r=radius)[0]
-    grp = cmds.group(con,n=grp_name)
-    cmds.delete(cmds.parentConstraint(target_ikh,grp))
-    cmds.parent(target_ikh,con)
-    cmds.setAttr(con+".overrideEnabled",1)
-    cmds.setAttr(con+".overrideColor",color)
-    shape = cmds.listRelatives(con,shapes=True)[0]
-    cmds.setAttr(shape+".lineWidth",thickness)
-    return grp,con
+    con = cmds.circle(n=con_name, ch=False, o=True, nr=normal, r=radius)[0]
+    grp = cmds.group(con, n=grp_name)
+    cmds.delete(cmds.parentConstraint(target_ikh, grp))
+    cmds.parent(target_ikh, con)
+    cmds.setAttr(con+".overrideEnabled", 1)
+    cmds.setAttr(con+".overrideColor", color)
+    shape = cmds.listRelatives(con, shapes=True)[0]
+    cmds.setAttr(shape+".lineWidth", thickness)
+    return grp, con
 
-L_arm_grp,L_arm_con = make_ik_ctrl_upright_thick("L_arm",L_arm_IKH,COLOR_LEFT,6,3)
-R_arm_grp,R_arm_con = make_ik_ctrl_upright_thick("R_arm",R_arm_IKH,COLOR_RIGHT,6,3)
-L_leg_grp,L_leg_con = make_ik_ctrl_upright_thick("L_leg",L_leg_IKH,COLOR_LEFT,6,3)
-R_leg_grp,R_leg_con = make_ik_ctrl_upright_thick("R_leg",R_leg_IKH,COLOR_RIGHT,6,3)
+L_arm_grp, L_arm_con = make_ik_ctrl("L_arm", L_arm_IKH, COLOR_LEFT, 6, 3, normal=[1,0,0])
+R_arm_grp, R_arm_con = make_ik_ctrl("R_arm", R_arm_IKH, COLOR_RIGHT, 6, 3, normal=[1,0,0])
+L_leg_grp, L_leg_con = make_ik_ctrl("L_leg", L_leg_IKH, COLOR_LEFT, 6, 3, normal=[0,1,0])
+R_leg_grp, R_leg_con = make_ik_ctrl("R_leg", R_leg_IKH, COLOR_RIGHT, 6, 3, normal=[0,1,0])
 
 if cmds.objExists("placement_CON"):
     try:
