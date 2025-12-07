@@ -232,11 +232,23 @@ L_leg_IKH = make_ikh(L_leg_ik[0],L_leg_ik[-1],"L_leg")
 R_leg_IKH = make_ikh(R_leg_ik[0],R_leg_ik[-1],"R_leg")
 
 # Define function to create IK con for a target IK handle:
+def make_ik_ctrl_upright_thick(name_prefix,target_ikh,color=17,radius=6,thickness=3):
+    con_name = name_prefix + "_ik_CON"
+    grp_name = name_prefix + "_ik_GRP"
 #   Create con circle
-#   Make con bold
-#   Set color
+    con = cmds.circle(n=con_name,ch=False,o=True,nr=[1,0,0],r=radius)[0]
 #   Grp
+    grp = cmds.group(con,n=grp_name)
 #   Parent under the con
+    cmds.delete(cmds.parentConstraint(target_ikh,grp))
+    cmds.parent(target_ikh,con)
+#   Set color
+    cmds.setAttr(con+".overrideEnabled",1)
+    cmds.setAttr(con+".overrideColor",color)
+    shape = cmds.listRelatives(con,shapes=True)[0]
+#   Make con bold
+    cmds.setAttr(shape+".lineWidth",thickness)
+    return grp,con
 
 # Apply to arm and leg IKH
 # Parent IK con grps under placement_CON
