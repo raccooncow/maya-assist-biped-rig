@@ -196,14 +196,11 @@ for jnt in right_joints:
 # arms and legs, and add pole vector controls for elbows.
 #
 
-# Duplicate FK joints for each arm and leg to make IK joint chains
 def duplicate_for_ik(joints):
     new = []
     for j in joints:
         if not cmds.objExists(j): continue
-# Rename it to _ik_JNT
         ik_name = j.replace("_JNT","_ik_JNT")
-# Parent duplicate like FK chain
         dup = cmds.duplicate(j,po=True,n=ik_name)[0]
         cmds.parent(dup,w=True)
         new.append(dup)
@@ -221,7 +218,6 @@ R_arm_ik  = duplicate_for_ik(right_arm_fk)
 L_leg_ik  = duplicate_for_ik(left_leg_fk)
 R_leg_ik  = duplicate_for_ik(right_leg_fk)
 
-# Create IKH for each chain
 def make_ikh(start,end,name_prefix):
     ikh_name = name_prefix + "_IKH"
     ikh,eff = cmds.ikHandle(n=ikh_name,sj=start,ee=end,sol="ikRPsolver")
@@ -232,32 +228,24 @@ R_arm_IKH = make_ikh(R_arm_ik[0],R_arm_ik[-1],"R_arm")
 L_leg_IKH = make_ikh(L_leg_ik[0],L_leg_ik[-1],"L_leg")
 R_leg_IKH = make_ikh(R_leg_ik[0],R_leg_ik[-1],"R_leg")
 
-# Define function to create IK con for a target IK handle:
 def make_ik_ctrl_upright_thick(name_prefix,target_ikh,color=17,radius=6,thickness=3):
     con_name = name_prefix + "_ik_CON"
     grp_name = name_prefix + "_ik_GRP"
-#   Create con circle
     con = cmds.circle(n=con_name,ch=False,o=True,nr=[1,0,0],r=radius)[0]
-#   Grp
     grp = cmds.group(con,n=grp_name)
-#   Parent under the con
     cmds.delete(cmds.parentConstraint(target_ikh,grp))
     cmds.parent(target_ikh,con)
-#   Set color
     cmds.setAttr(con+".overrideEnabled",1)
     cmds.setAttr(con+".overrideColor",color)
     shape = cmds.listRelatives(con,shapes=True)[0]
-#   Make con bold
     cmds.setAttr(shape+".lineWidth",thickness)
     return grp,con
 
-# Apply to arm and leg IKH
 L_arm_grp,L_arm_con = make_ik_ctrl_upright_thick("L_arm",L_arm_IKH,COLOR_LEFT,6,3)
 R_arm_grp,R_arm_con = make_ik_ctrl_upright_thick("R_arm",R_arm_IKH,COLOR_RIGHT,6,3)
 L_leg_grp,L_leg_con = make_ik_ctrl_upright_thick("L_leg",L_leg_IKH,COLOR_LEFT,6,3)
 R_leg_grp,R_leg_con = make_ik_ctrl_upright_thick("R_leg",R_leg_IKH,COLOR_RIGHT,6,3)
 
-# Parent IK con grps under placement_CON
 if cmds.objExists("placement_CON"):
     try:
         cmds.parent(L_arm_grp,"placement_CON")
@@ -266,16 +254,11 @@ if cmds.objExists("placement_CON"):
         cmds.parent(R_leg_grp,"placement_CON")
     except: pass
 
-# Create arm PV con
 def create_arm_pv_control(shoulder_jnt, elbow_jnt, wrist_jnt, ikh, prefix, side_color, offset_scale=1.0):
-#   To calculate PV position:
-#       Level with elbow
-#       Push back along negative Z
     S = cmds.xform(shoulder_jnt,q=True,ws=True,t=True)
     E = cmds.xform(elbow_jnt,q=True,ws=True,t=True)
     W = cmds.xform(wrist_jnt,q=True,ws=True,t=True)
     PV_pos = [E[0], E[1], E[2] - math.sqrt(sum((W[i]-S[i])**2 for i in range(3)))*offset_scale]
-#   Create con circle and grp
     ctrl_name = prefix+"_pv_CON"
     grp_name = prefix+"_pv_GRP"
     if cmds.objExists(ctrl_name): cmds.delete(ctrl_name)
@@ -283,15 +266,12 @@ def create_arm_pv_control(shoulder_jnt, elbow_jnt, wrist_jnt, ikh, prefix, side_
     pv_ctrl = cmds.circle(n=ctrl_name,ch=False,o=True,nr=[1,0,0],r=2.0)[0]
     pv_grp = cmds.group(pv_ctrl,n=grp_name)
     cmds.xform(pv_grp,ws=True,t=PV_pos)
-#   Set color
     cmds.setAttr(pv_ctrl+".overrideEnabled",1)
     cmds.setAttr(pv_ctrl+".overrideColor",side_color)
-#   Constrain PV con to IKH
     cmds.poleVectorConstraint(pv_ctrl,ikh)
     if cmds.objExists("placement_CON"):
         cmds.parent(pv_grp,"placement_CON")
     return pv_grp,pv_ctrl
-#   Parent PV grp under placement_CON
 create_arm_pv_control("L_shoulder_ik_JNT","L_elbow_ik_JNT","L_wrist_ik_JNT",L_arm_IKH,"L_arm",COLOR_LEFT,1.0)
 create_arm_pv_control("R_shoulder_ik_JNT","R_elbow_ik_JNT","R_wrist_ik_JNT",R_arm_IKH,"R_arm",COLOR_RIGHT,1.0)
 
